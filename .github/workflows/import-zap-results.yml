@@ -1,0 +1,24 @@
+name: Import ZAP Results to SonarQube
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # Adjust as needed
+
+jobs:
+  import-zap-results:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download ZAP report
+        run: bash scripts/download_zap_report.sh
+
+      - name: Import ZAP report to SonarQube
+        uses: sonarsource/sonarqube-scan-action@v1.3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: .
+          extraProperties: |
+            sonar.externalIssuesReportPaths=zap_report.html

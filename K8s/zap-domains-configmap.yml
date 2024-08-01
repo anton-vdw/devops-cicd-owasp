@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zap-domains
+data:
+  domains.txt: |
+    https://datafree.co
+    https://pub.bi.nu
