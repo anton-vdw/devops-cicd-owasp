@@ -4,17 +4,20 @@
 if [ -d "k8s" ]; then
   cd k8s
 
+  echo "Creating OWASP ZAP Namespace..."
+  [ -f zap-namespace.yml ] && kubectl apply -f zap-namespace.yml
+
   echo "Deploying OWASP ZAP ConfigMap for domains..."
-  [ -f zap-domains-configmap.yaml ] && kubectl apply -f zap-domains-configmap.yaml
+  [ -f zap-domains-configmap.yml ] && kubectl apply -f zap-domains-configmap.yml
 
   echo "Deploying OWASP ZAP Deployment..."
-  [ -f zap-deployment.yaml ] && kubectl apply -f zap-deployment.yaml
+  [ -f zap-deployment.yml ] && kubectl apply -f zap-deployment.yml
 
   echo "Deploying OWASP ZAP Service..."
-  [ -f zap-service.yaml ] && kubectl apply -f zap-service.yaml
+  [ -f zap-service.yml ] && kubectl apply -f zap-service.yml
 
   echo "Deploying OWASP ZAP CronJob..."
-  [ -f zap-cronjob.yaml ] && kubectl apply -f zap-cronjob.yaml
+  [ -f zap-cronjob.yml ] && kubectl apply -f zap-cronjob.yml
 
   echo "Deployment complete."
 else

@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: zap-scan
+  namespace: owasp-zap
 spec:
   schedule: "0 0 * * *"  # Adjust the schedule as needed
   jobTemplate:

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zap
+  namespace: owasp-zap
 spec:
   replicas: 1
   selector:
@@ -13,13 +14,14 @@ spec:
         app: zap
     spec:
       containers:
-        - name: zap
-          image: owasp/zap2docker-stable
-          ports:
-            - containerPort: 8080
-          volumeMounts:
-            - name: zap-data
-              mountPath: /zap/wrk/
-      volumes:
-        - name: zap-data
-          emptyDir: {}
+      - name: zap
+        image: ghcr.io/zaproxy/zaproxy:stable
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
