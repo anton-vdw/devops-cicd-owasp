@@ -2,33 +2,29 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: zap-scan
-  namespace: owasp-zap
 spec:
-  schedule: "0 0 * * *"  # Adjust the schedule as needed
+  schedule: "0 2 * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-            - name: zap-scan
-              image: owasp/zap2docker-stable
-              command:
-                - /bin/sh
-                - -c
-                - |
-                  while read domain; do
-                    zap-baseline.py -t "$domain" -r "/zap/wrk/zap_report_$(echo $domain | sed 's/[:\/]/_/g').html"
-                  done < /zap/wrk/domains.txt
-              volumeMounts:
-                - name: zap-data
-                  mountPath: /zap/wrk/
-                - name: zap-domains
-                  mountPath: /zap/wrk/domains.txt
-                  subPath: domains.txt
+          - name: zap-scan
+            image: ghcr.io/zaproxy/zaproxy:stable
+            command:
+            - /bin/sh
+            - -c
+            - while read domain; do zap-baseline.py -t "$domain" -r "/zap/wrk/zap_report_$(echo $domain | sed 's/[:\/]/_/g').html"; done < /zap/wrk/domains.txt
+            volumeMounts:
+            - name: zap-data
+              mountPath: /zap/wrk
+            - name: zap-domains
+              mountPath: /zap/wrk/domains.txt
+              subPath: domains.txt
           restartPolicy: OnFailure
           volumes:
-            - name: zap-data
-              emptyDir: {}
-            - name: zap-domains
-              configMap:
-                name: zap-domains
+          - name: zap-data
+            emptyDir: {}
+          - name: zap-domains
+            configMap:
+              name: zap-domains
