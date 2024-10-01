@@ -16,13 +16,15 @@ spec:
       containers:
       - name: zap
         image: ghcr.io/zaproxy/zaproxy:stable
-        command: ["/bin/sh", "-c", "sleep 3600"]
         ports:
         - containerPort: 8080
+        - containerPort: 8090
+        command: ["/bin/sh", "-c"]
+        args: ["zap-webswing.sh -daemon -host 0.0.0.0 -port 8080 -webswing.port 8090; tail -f /dev/null"]
         resources:
           limits:
-            cpu: "1"
-            memory: "512Mi"
+            cpu: "2"          # Increase CPU limit
+            memory: "2Gi"     # Increase memory limit
           requests:
-            cpu: "500m"
-            memory: "256Mi"
+            cpu: "1"          # Increase CPU request
+            memory: "1Gi"     # Increase memory request
